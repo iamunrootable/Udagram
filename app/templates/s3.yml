@@ -1,0 +1,57 @@
+Description: >
+    Rocky Donohue - Udagram
+    This Template creates an S3 bucket and associetes an IAM role with a defined policy. 
+
+Parameters:
+    EnvironmentName:
+        Description: An environment name that will be prefixed to resource names
+        Type: String
+        Default: udagram
+    
+
+Resources:
+    AppBucket:
+      Type: 'AWS::S3::Bucket'
+      Properties: 
+        BucketName: !Sub "${EnvironmentName}-bucket-rd"
+        Tags: 
+          - Key: "Stack"
+            Value: "udagram"
+    AppBucketIAMRole:
+      Type: 'AWS::IAM::Role'
+      Properties: 
+        AssumeRolePolicyDocument:
+          Version: 2012-10-17          
+          Statement:                     
+            - Effect: Allow
+              Principal:
+                Service: ec2.amazonaws.com
+              Action: sts:AssumeRole
+    AppBucketRolePolicies:
+      Type: AWS::IAM::Policy
+      Properties:
+        PolicyName: AppInstancePolicy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action: 's3:*'
+              Resource: '*'
+        Roles:
+          - !Ref AppBucketIAMRole 
+    AppInstanceProfile:
+      Type: AWS::IAM::InstanceProfile
+      Properties: 
+        Path: /
+        Roles:
+          - !Ref AppBucketIAMRole    
+
+Outputs: 
+    AppBucketIAMRole: 
+      Description: A reference to the created IAM Role for S3 
+      Value: !Ref AppBucketIAMRole
+    AppInstanceProfile:
+      Description: A reference to the instance profile.
+      Value: !Ref AppInstanceProfile
+
+
