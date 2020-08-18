@@ -2,6 +2,10 @@
 
 Instagram Clone Cloud Formation Project 
 
+## Description
+
+Deploy a highly available web application using CloudFormaiton and nested stacks.
+
 ## Installation
 
 Download and install the AWS CLI tool.
@@ -35,6 +39,11 @@ Example:
 ```bash
 aws --region us-west-2 s3 cp webapp.yml s3://<your_bucket>/webapp.yml
 ```
+Copy the udacity.zip file in UDAGRAM\app\files to your new bucket.
+Example:
+```bash
+aws --region us-west-2 s3 cp udacity.zip s3://<your_bucket>/udacity.zip
+```
 
 Use the following deploy-nested-stack.sh script found in UDAGRAM\scripts
 ```bash
@@ -43,5 +52,9 @@ aws cloudformation deploy \
 --template-file $2 \
 --capabilities CAPABILITY_NAMED_IAM   
 ```
-* Stack name in this case refers to the root stack
+
+In order to delete the stack run the following command:
+```bash
+aws cloudformation delete-stack --stack-name <your_stack_name>
+```
 
